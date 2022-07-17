@@ -4,8 +4,8 @@ from django.shortcuts import render
 from account.models import CustomUser, Profession
 from account.serializers import ProfessionSerializer, UserSerializer
 from django.contrib.auth import authenticate, login
-from feed.models import Album, Folder, Post, PostImage
-from feed.serializers import AlbumSerializer, FolderSerializer, PostSerializer
+from feed.models import Album, ArchivePost, FavouritePost, Folder, Post, PostImage, TrashPost
+from feed.serializers import AlbumSerializer, ArchivePostSerializer, FavouritePostSerializer, FolderSerializer, PostSerializer, TrashPostSerializer
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -101,6 +101,120 @@ class FolderAlbumView(viewsets.ViewSet):
         user = request.user
         album_object = Album.objects.filter(user=user)
         res = AlbumSerializer(album_object, many=True).data
+        return Response(
+            data={'status': True, 'data': res}, 
+            status=status.HTTP_200_OK
+        )
+
+class TrashView(viewsets.ViewSet):
+    authentication_classes = (JWTAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def add_trash(self,request):
+        user = request.user
+        data = request.data
+        post_id = data.get('post_id')
+        post = Post.objects.get(id=int(post_id))
+        trash_post = TrashPost(
+            user = user,
+            post = post
+        )
+        trash_post.save()
+        return Response(
+                    data={'status': True, 'message': 'post moved to trash successfully'}, 
+                    status=status.HTTP_200_OK
+                )
+    
+    def get_single_trash(self,request,**kwargs):
+        slug = kwargs.get("slug")
+        user = request.user
+        post_object = TrashPost.objects.filter(user=user,id=int(slug))
+        res = TrashPostSerializer(post_object, many=True).data
+        return Response(
+            data={'status': True, 'data': res}, 
+            status=status.HTTP_200_OK
+        )
+
+    def get_all_trash(self,request):
+        user = request.user
+        post_object = TrashPost.objects.filter(user=user)
+        res = TrashPostSerializer(post_object, many=True).data
+        return Response(
+            data={'status': True, 'data': res}, 
+            status=status.HTTP_200_OK
+        )
+
+class ArchiveView(viewsets.ViewSet):
+    authentication_classes = (JWTAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def add_archive(self,request):
+        user = request.user
+        data = request.data
+        post_id = data.get('post_id')
+        post = Post.objects.get(id=int(post_id))
+        archive_post = ArchivePost(
+            user = user,
+            post = post
+        )
+        archive_post.save()
+        return Response(
+                    data={'status': True, 'message': 'post moved to trash successfully'}, 
+                    status=status.HTTP_200_OK
+                )
+    
+    def get_single_archive(self,request,**kwargs):
+        slug = kwargs.get("slug")
+        user = request.user
+        post_object = ArchivePost.objects.filter(user=user,id=int(slug))
+        res = ArchivePostSerializer(post_object, many=True).data
+        return Response(
+            data={'status': True, 'data': res}, 
+            status=status.HTTP_200_OK
+        )
+
+    def get_all_archive(self,request):
+        user = request.user
+        post_object = ArchivePost.objects.filter(user=user)
+        res = ArchivePostSerializer(post_object, many=True).data
+        return Response(
+            data={'status': True, 'data': res}, 
+            status=status.HTTP_200_OK
+        )
+
+class FavouriteView(viewsets.ViewSet):
+    authentication_classes = (JWTAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def add_favourite(self,request):
+        user = request.user
+        data = request.data
+        post_id = data.get('post_id')
+        post = Post.objects.get(id=int(post_id))
+        favourite_post = FavouritePost(
+            user = user,
+            post = post
+        )
+        favourite_post.save()
+        return Response(
+                    data={'status': True, 'message': 'post moved to trash successfully'}, 
+                    status=status.HTTP_200_OK
+                )
+    
+    def get_single_favourite(self,request,**kwargs):
+        slug = kwargs.get("slug")
+        user = request.user
+        post_object = FavouritePost.objects.filter(user=user,id=int(slug))
+        res = FavouritePostSerializer(post_object, many=True).data
+        return Response(
+            data={'status': True, 'data': res}, 
+            status=status.HTTP_200_OK
+        )
+
+    def get_all_favourite(self,request):
+        user = request.user
+        post_object = FavouritePost.objects.filter(user=user)
+        res = FavouritePostSerializer(post_object, many=True).data
         return Response(
             data={'status': True, 'data': res}, 
             status=status.HTTP_200_OK

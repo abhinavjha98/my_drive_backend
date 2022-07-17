@@ -1,5 +1,5 @@
 from account.models import CustomUser
-from feed.models import Album, Folder, Post, PostImage
+from feed.models import Album, Folder, Post, PostImage, TrashPost
 from rest_framework import serializers
 
 class PostSerializer(serializers.ModelSerializer):
@@ -73,4 +73,66 @@ class AlbumSerializer(serializers.ModelSerializer):
             user = CustomUser.objects.get(id=obj.user.id)
             return user.username
         except :
+            return None
+
+class TrashPostSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    post = serializers.SerializerMethodField()
+    class Meta:
+        model = TrashPost
+        fields = '__all__'
+
+    def get_user(self , obj):
+        try:
+            user = CustomUser.objects.get(id=obj.user.id)
+            return user.username
+        except :
+            return None
+
+    def get_post(self,obj):
+        try:
+            post = Post.objects.get(id=obj.post.id)
+            return post.id
+        except:
+            return None
+
+class ArchivePostSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    post = serializers.SerializerMethodField()
+    class Meta:
+        model = Album
+        fields = '__all__'
+
+    def get_user(self , obj):
+        try:
+            user = CustomUser.objects.get(id=obj.user.id)
+            return user.username
+        except :
+            return None
+    def get_post(self,obj):
+        try:
+            post = Post.objects.get(id=obj.post.id)
+            return post.id
+        except:
+            return None
+
+class FavouritePostSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    post = serializers.SerializerMethodField()
+    class Meta:
+        model = Album
+        fields = '__all__'
+
+    def get_user(self , obj):
+        try:
+            user = CustomUser.objects.get(id=obj.user.id)
+            return user.username
+        except :
+            return None
+
+    def get_post(self,obj):
+        try:
+            post = Post.objects.get(id=obj.post.id)
+            return post.id
+        except:
             return None

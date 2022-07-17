@@ -26,17 +26,17 @@ class PostImageAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_filter = ('post__user__username',)
 
 class ArchivePostAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-    list_display = ('post','post',)
+    list_display = ('user','post',)
     search_fields = ('post__title','post__places','post__places')
     list_filter = ('post__user__username',)
 
 class FavouritePostAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-    list_display = ('post','post',)
+    list_display = ('user','post',)
     search_fields = ('post__title','post__places','post__places')
     list_filter = ('post__user__username',)
 
 class TrashPostAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-    list_display = ('post','post',)
+    list_display = ('user','post',)
     search_fields = ('post__title','post__places','post__places')
     list_filter = ('post__user__username',)
 
