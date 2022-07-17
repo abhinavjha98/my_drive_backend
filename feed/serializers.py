@@ -91,8 +91,8 @@ class TrashPostSerializer(serializers.ModelSerializer):
 
     def get_post(self,obj):
         try:
-            post = Post.objects.get(id=obj.post.id)
-            return post.id
+            post = Post.objects.filter(id=obj.post.id)
+            return PostSerializer(post, many=True).data
         except:
             return None
 
@@ -111,7 +111,7 @@ class ArchivePostSerializer(serializers.ModelSerializer):
             return None
     def get_post(self,obj):
         try:
-            post = Post.objects.get(id=obj.post.id)
+            post = Post.objects.filter(id=obj.post.id)
             return post.id
         except:
             return None
@@ -132,7 +132,7 @@ class FavouritePostSerializer(serializers.ModelSerializer):
 
     def get_post(self,obj):
         try:
-            post = Post.objects.get(id=obj.post.id)
+            post = Post.objects.filter(id=obj.post.id)
             return post.id
         except:
             return None

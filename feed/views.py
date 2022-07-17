@@ -4,7 +4,7 @@ from django.shortcuts import render
 from account.models import CustomUser, Profession
 from account.serializers import ProfessionSerializer, UserSerializer
 from django.contrib.auth import authenticate, login
-from feed.models import Album, ArchivePost, FavouritePost, Folder, Post, PostImage, TrashPost
+from feed.models import Album, ArchivePost, DeleteArchivePost, DeleteFavouritePost, DeleteTrashPost, FavouritePost, Folder, Post, PostImage, TrashPost
 from feed.serializers import AlbumSerializer, ArchivePostSerializer, FavouritePostSerializer, FolderSerializer, PostSerializer, TrashPostSerializer
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -105,6 +105,27 @@ class FolderAlbumView(viewsets.ViewSet):
             data={'status': True, 'data': res}, 
             status=status.HTTP_200_OK
         )
+    
+    def delete_folder(self,request,**kwargs):
+        slug = kwargs.get("slug")
+        user = request.user
+        folder_object = Folder.objects.get(user=user,id=int(slug))
+        folder_object.delete()
+        return Response(
+            data={'status': True, 'data': "Deleted Successfully"}, 
+            status=status.HTTP_200_OK
+        )
+
+    def delete_album(self,request,**kwargs):
+        slug = kwargs.get("slug")
+        user = request.user
+        folder_object = Album.objects.get(user=user,id=int(slug))
+        folder_object.delete()
+        return Response(
+            data={'status': True, 'data': "Deleted Successfully"}, 
+            status=status.HTTP_200_OK
+        )
+    
 
 class TrashView(viewsets.ViewSet):
     authentication_classes = (JWTAuthentication, )
@@ -141,6 +162,23 @@ class TrashView(viewsets.ViewSet):
         res = TrashPostSerializer(post_object, many=True).data
         return Response(
             data={'status': True, 'data': res}, 
+            status=status.HTTP_200_OK
+        )
+    
+    def delete_trash(self,request,**kwargs):
+        slug = kwargs.get("slug")
+        user = request.user
+        post_object = TrashPost.objects.get(user=user,id=int(slug))
+        post_real = Post.objects.get(user=user,id=int(slug))
+        deleteTrash = DeleteTrashPost(
+            user = user,
+            post = post_object.post
+        )
+        deleteTrash.save()
+        post_object.delete()
+        post_real.delete()
+        return Response(
+            data={'status': True, 'data': "Deleted Successfully"}, 
             status=status.HTTP_200_OK
         )
 
@@ -181,6 +219,23 @@ class ArchiveView(viewsets.ViewSet):
             data={'status': True, 'data': res}, 
             status=status.HTTP_200_OK
         )
+    
+    def delete_archive(self,request,**kwargs):
+        slug = kwargs.get("slug")
+        user = request.user
+        post_object = ArchivePost.objects.get(user=user,id=int(slug))
+        post_real = Post.objects.get(user=user,id=int(slug))
+        deleteTrash = DeleteArchivePost(
+            user = user,
+            post = post_object.post
+        )
+        deleteTrash.save()
+        post_object.delete()
+        post_real.delete()
+        return Response(
+            data={'status': True, 'data': "Deleted Successfully"}, 
+            status=status.HTTP_200_OK
+        )
 
 class FavouriteView(viewsets.ViewSet):
     authentication_classes = (JWTAuthentication, )
@@ -217,5 +272,22 @@ class FavouriteView(viewsets.ViewSet):
         res = FavouritePostSerializer(post_object, many=True).data
         return Response(
             data={'status': True, 'data': res}, 
+            status=status.HTTP_200_OK
+        )
+
+    def delete_archive(self,request,**kwargs):
+        slug = kwargs.get("slug")
+        user = request.user
+        post_object = FavouritePost.objects.get(user=user,id=int(slug))
+        post_real = Post.objects.get(user=user,id=int(slug))
+        deleteTrash = DeleteFavouritePost(
+            user = user,
+            post = post_object.post
+        )
+        deleteTrash.save()
+        post_object.delete()
+        post_real.delete()
+        return Response(
+            data={'status': True, 'data': "Deleted Successfully"}, 
             status=status.HTTP_200_OK
         )

@@ -47,3 +47,15 @@ class UserShare(Base):
     shared_by = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='shared_by_me')
     shared_to = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='shared_with_me')
     post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
+
+class DeleteArchivePost(Base):
+    user = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='deletearchive')
+
+class DeleteFavouritePost(Base):
+    user = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='deletefavourite')
+
+class DeleteTrashPost(Base):
+    user = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='deletetrash')

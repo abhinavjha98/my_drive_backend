@@ -12,10 +12,13 @@ urlpatterns = [
    path('trashpost/get/<str:slug>/',TrashView.as_view({'get':'get_single_trash'})),
    path('trashpost/get/all/',TrashView.as_view({'get':'get_all_trash'})),
    path('trashpost/add/',TrashView.as_view({'post':'add_trash'})),
+   path('trashpost/delete/<str:slug>/',TrashView.as_view({'get':'delete_trash'})),
    path('archivepost/get/<str:slug>/',ArchiveView.as_view({'get':'get_single_archive'})),
    path('archivepost/get/all/',ArchiveView.as_view({'get':'get_all_archive'})),
    path('archivepost/add/',ArchiveView.as_view({'post':'add_archive'})),
+   path('archivepost/delete/<str:slug>/',ArchiveView.as_view({'get':'delete_archive'})),
    path('favouritepost/get/<str:slug>/',FavouriteView.as_view({'get':'get_single_favourite'})),
    path('favouritepost/get/all/',FavouriteView.as_view({'get':'get_all_favourite'})),
    path('favouritepost/add/',FavouriteView.as_view({'post':'add_favourite'})),
+   path('favouritepost/delete/<str:slug>/',FavouriteView.as_view({'get':'delete_favourite'})),
 ]

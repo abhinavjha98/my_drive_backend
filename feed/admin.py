@@ -1,6 +1,6 @@
 from calendar import c
 from django.contrib import admin
-from feed.models import Album, ArchivePost, FavouritePost, Folder, Post, PostImage, TrashPost, UserShare
+from feed.models import Album, ArchivePost, DeleteTrashPost, FavouritePost, Folder, Post, PostImage, TrashPost, UserShare
 from feed.serializers import AlbumSerializer
 from import_export.admin import ImportExportModelAdmin
 # Register your models here.
@@ -45,6 +45,11 @@ class UserShareAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     search_fields = ('post__title','post__places','post__places')
     list_filter = ('post__user__username',)
 
+class DeleteTrashPostAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    list_display = ('user','post',)
+    search_fields = ('post__title','post__places','post__places')
+    list_filter = ('post__user__username',)
+
 admin.site.register(Post,PostAdmin)
 admin.site.register(Folder,FolderAdmin)
 admin.site.register(Album,AlbumAdmin)
@@ -53,3 +58,4 @@ admin.site.register(TrashPost,TrashPostAdmin)
 admin.site.register(ArchivePost,ArchivePostAdmin)
 admin.site.register(FavouritePost,FavouritePostAdmin)
 admin.site.register(UserShare,UserShareAdmin)
+admin.site.register(DeleteTrashPost,DeleteTrashPostAdmin)
